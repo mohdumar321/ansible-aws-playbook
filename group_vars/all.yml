@@ -1,0 +1,9 @@
+---
+region: "ap-south-1"
+owner: "309956199498"
+find_image: "RHEL-7.4*"
+sg_name: "ishwar-ansible-sg"
+ec2_name: "ishwar-ansible-instances"
+no_instances: "2"
+instance_type: "t2.micro"
+key_name: "ansible"
