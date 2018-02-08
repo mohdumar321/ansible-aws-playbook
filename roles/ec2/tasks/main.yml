@@ -1,0 +1,50 @@
+- name: Search for latest version of RHEL 7 AMI
+  ec2_ami_find:
+    region: ap-south-1
+    owner: "309956199498"
+    name: "RHEL-7.4*"
+  register: ami_results
+
+#- debug: var=ami_results
+
+- name: Search for subnet ids
+  ec2_vpc_subnet_facts:
+    region: ap-south-1
+  register: subnet_ids
+
+#- debug: var=subnet_ids
+
+- name: Create a new security group
+  ec2_group:
+    name: ishwar-ansible-sg
+    description: Group created by AWS playbook
+    region: ap-south-1
+    state: present
+    rules:
+    - proto: tcp
+      from_port: 22
+      to_port: 22
+      cidr_ip: 0.0.0.0/0
+
+- name: Get the security group info
+  ec2_group_facts:
+    region: ap-south-1
+    filters:
+      group-name: ishwar-ansible-sg
+  register: sg_info
+
+#- debug: var=sg_info
+
+- name: Create AWS instances
+  ec2:
+    count_tag: 
+      Name: ishwar-ansible-instances
+    exact_count: 2
+    group: ishwar-ansible-sg
+    image: "{{ami_results.results[0].ami_id}}"
+    instance_tags:
+      Name: ishwar-ansible-instances
+    instance_type: t2.micro
+    key_name: ansible
+    region: ap-south-1
+    vpc_subnet_id: "{{subnet_ids.subnets[0].id}}" 
