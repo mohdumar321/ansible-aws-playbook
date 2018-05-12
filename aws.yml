@@ -1,5 +1,5 @@
 ---
-- name: AWS playbook to launch an EC2 instance
+- name: AWS playbook to launch EC2 instances
   hosts: localhost
   connection: local
   gather_facts: false

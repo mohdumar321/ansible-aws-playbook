@@ -1,8 +1,9 @@
 - name: Search for latest version of RHEL 7 AMI
-  ec2_ami_find:
+  ec2_ami_facts:
     region: "{{ region }}"
     owner: "{{owner}}"
-    name: "{{ find_image }}"
+    filters:
+      name: "{{ find_image }}"
   register: ami_results
 
 #- debug: var=ami_results
@@ -41,10 +42,10 @@
       Name: "{{ ec2_name }}"
     exact_count: "{{ no_instances }}"
     group: "{{ sg_name }}"
-    image: "{{ami_results.results[0].ami_id}}"
+    image: "{{ami_results.images[0].image_id}}"
     instance_tags:
       Name: "{{ ec2_name }}"
     instance_type: "{{ instance_type }}"
     key_name: "{{ key_name }}"
     region: "{{ region }}"
-    vpc_subnet_id: "{{subnet_ids.subnets[0].id}}" 
+    vpc_subnet_id: "{{subnet_ids.subnets[4].id}}" 
